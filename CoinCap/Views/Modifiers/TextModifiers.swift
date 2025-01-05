@@ -26,6 +26,20 @@ struct RegularTextModifier: ViewModifier {
     }
 }
 
+struct AssetChangeColorModifier: ViewModifier {
+    let isPositive: Bool
+    let fontSize: CGFloat
+    
+    private let negativeColor: Color = .init(hex: 0xe54560)
+    private let positiveColor: Color = .init(hex: 0x1fcc8f)
+    
+    func body(content: Content) -> some View {
+        content
+            .modifier(BoldTextModifier(fontSize: fontSize))
+            .foregroundStyle(isPositive ? positiveColor : negativeColor)
+    }
+}
+
 // MARK: - Text Extension
 extension Text {
     func boldText(size: CGFloat) -> some View {
@@ -34,5 +48,9 @@ extension Text {
     
     func regularText(size: CGFloat) -> some View {
         self.modifier(RegularTextModifier(fontSize: size))
+    }
+    
+    func assetChangeText(isPositive: Bool, size: CGFloat) -> some View {
+        self.modifier(AssetChangeColorModifier(isPositive: isPositive, fontSize: size))
     }
 }

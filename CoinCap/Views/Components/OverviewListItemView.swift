@@ -14,11 +14,13 @@ struct OverviewListItemView: View {
     private let symbol: String
     private let price: String
     private let percentageChange: String
+    private let isPositivePercentageChange: Bool
     
     enum Constants {
-        static let height: CGFloat = 117
         static let spacing: CGFloat = 16
+        static let cornerRadius: CGFloat = 16
         static let leadingPadding: CGFloat = 12
+        static let backgroundColor: Color = .white.opacity(0.4)
         
         static let imageHeight: CGFloat = 56
         
@@ -26,18 +28,21 @@ struct OverviewListItemView: View {
         static let subtitleFontSize: CGFloat = 16
         static let percentageFontSize: CGFloat = 16
         
+        static let foregroundTextColor: Color = .init(hex: 0x292E33)
+        
         static let titleViewHeight: CGFloat = 14
         static let subtitleViewHeight: CGFloat = 11
         static let buttonViewHeight: CGFloat = 24
     }
     
-    init(id: String, iconURL: URL?, name: String, symbol: String, price: String, percentageChange: String) {
-        self.id = id
-        self.iconURL = iconURL
-        self.name = name
-        self.symbol = symbol
-        self.price = price
-        self.percentageChange = percentageChange
+    init(item: Asset) {
+        self.id = item.id
+        self.iconURL = item.iconURL
+        self.name = item.name
+        self.symbol = item.symbol
+        self.price = item.price
+        self.percentageChange = item.percentageChange
+        isPositivePercentageChange = percentageChange.hasPrefix("+") 
     }
     
     var body: some View {
@@ -51,10 +56,10 @@ struct OverviewListItemView: View {
             
             infoView
         }
-               .frame(height: Constants.height)
-               .padding([.vertical, .trailing], Constants.spacing)
-               .padding(.leading, Constants.leadingPadding)
-        
+        .padding([.vertical, .trailing], Constants.spacing)
+        .padding(.leading, Constants.leadingPadding)
+        .background(Constants.backgroundColor)
+        .cornerRadius(Constants.cornerRadius)
     }
     
     var infoView: some View {
@@ -63,8 +68,8 @@ struct OverviewListItemView: View {
             titleView
             subtitleView
             buttonView
-            Spacer()
         }
+        .foregroundStyle(Constants.foregroundTextColor)
     }
     
     var titleView: some View {
@@ -88,8 +93,8 @@ struct OverviewListItemView: View {
             Spacer()
             
             Text(percentageChange)
-                .boldText(size: Constants.percentageFontSize)
-                .foregroundColor(percentageChange.hasPrefix("-") ? .red : .green)
+                .assetChangeText(isPositive: isPositivePercentageChange,
+                                 size: Constants.percentageFontSize)
         }
         .frame(height: Constants.subtitleViewHeight)
     }
@@ -107,11 +112,6 @@ struct OverviewListItemView: View {
 
 #Preview {
     OverviewListItemView(
-        id: "bitcoin",
-        iconURL: URL(string: "https://assets.coincap.io/assets/icons/btc@2x.png"),
-        name: "Bitcoin",
-        symbol: "BTC",
-        price: "$97,446.39",
-        percentageChange: "-0.54%"
+        item: .preview1
     )
 }
