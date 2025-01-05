@@ -40,7 +40,7 @@ struct OverviewListItemView: View {
         self.iconURL = item.iconURL
         self.name = item.name
         self.symbol = item.symbol
-        self.price = item.price
+        self.price = item.priceUsd.compactDollarSum
         self.percentageChange = item.percentageChange
         isPositivePercentageChange = item.isPositivePercentageChange
     }
