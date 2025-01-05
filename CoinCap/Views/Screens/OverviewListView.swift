@@ -6,11 +6,10 @@
 //
 
 import SwiftUI
+import ComposableArchitecture
 
 struct OverviewListView: View {
-    let title: String
-    let items: [Asset]
-    
+    let store: Store<OverviewListReducer.State, OverviewListReducer.Action>
     
     enum Constants {
         static let spacing: CGFloat = 16
@@ -24,40 +23,65 @@ struct OverviewListView: View {
     }
     
     var body: some View {
-        NavigationView {
-            VStack(alignment: .leading) {
-                Text(title)
-                    .boldText(size: 32)
-                    .foregroundStyle(Constants.foregroundTextColor)
-                    .textCase(.uppercase)
-                    .frame(height: Constants.titleHeight)
-                
-                ScrollView {
-                    VStack(spacing: Constants.spacing) {
-                        ForEach(items) { asset in
-                            OverviewListItemView(item: asset)
-                        }
+        WithViewStore(self.store, observe: { $0 }) { viewStore in
+            NavigationView {
+                VStack(alignment: .leading) {
+                    titleView(with: viewStore.state.title)
+                    
+                    if viewStore.assets.isEmpty {
+                        loadingView
+                    } else {
+                        listView(with: viewStore)
                     }
                 }
+                .padding(Constants.padding)
+                .background(LinearGradient(
+                    gradient: Gradient(colors: Constants.gradientColors),
+                    startPoint: .top,
+                    endPoint: .bottom
+                ))
+                .edgesIgnoringSafeArea(.bottom) 
             }
-            .padding(Constants.padding)
-            .background(LinearGradient(
-                gradient: Gradient(colors: Constants.gradientColors),
-                startPoint: .top,
-                endPoint: .bottom
-            ))
+            .onAppear {
+                viewStore.send(.fetchAssets)
+            }
+            .navigationTitle("")
+            .navigationBarHidden(true)
         }
-        .navigationTitle("")
-        .navigationBarHidden(true)
+    }
+    
+    func titleView(with text: String) -> some View {
+        Text(text)
+            .boldText(size: 32)
+            .foregroundStyle(Constants.foregroundTextColor)
+            .textCase(.uppercase)
+            .frame(height: Constants.titleHeight)
+    }
+    
+    var loadingView: some View {
+        ZStack {
+            ProgressView()
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+    
+    func listView(with viewStore: ViewStore<OverviewListReducer.State, OverviewListReducer.Action>) -> some View {
+        ScrollView {
+            VStack(spacing: Constants.spacing) {
+                ForEach(viewStore.state.assets) { asset in
+                    OverviewListItemView(item: asset)
+                }
+            }
+        }
+        .scrollIndicators(.hidden)
     }
 }
 
 #Preview {
     OverviewListView(
-        title: "Coins",
-        items: [
-            .preview1,
-            .preview2
-        ]
+        store: Store(
+            initialState: OverviewListReducer.State(),
+            reducer: OverviewListReducer.init
+        )
     )
 }

@@ -6,12 +6,18 @@
 //
 
 import SwiftUI
+import ComposableArchitecture
 
 @main
 struct CoinCapApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            OverviewListView(
+                store: Store(
+                    initialState: OverviewListReducer.State(),
+                    reducer: OverviewListReducer.init
+                )
+            )
         }
     }
 }

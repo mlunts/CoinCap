@@ -42,7 +42,7 @@ struct OverviewListItemView: View {
         self.symbol = item.symbol
         self.price = item.price
         self.percentageChange = item.percentageChange
-        isPositivePercentageChange = percentageChange.hasPrefix("+") 
+        isPositivePercentageChange = item.isPositivePercentageChange
     }
     
     var body: some View {
