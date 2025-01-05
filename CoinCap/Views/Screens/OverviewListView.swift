@@ -61,7 +61,11 @@ struct OverviewListView: View {
         ScrollView {
             VStack(spacing: Constants.spacing) {
                 ForEach(viewStore.state.assets) { asset in
-                    OverviewListItemView(item: asset)
+                    NavigationLink(destination: DetailsView(
+                        title: asset.name,
+                        iconURL: asset.iconURL)) {
+                        OverviewListItemView(item: asset)
+                    }
                 }
             }
         }
