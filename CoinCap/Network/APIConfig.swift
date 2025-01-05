@@ -1,5 +1,5 @@
 //
-//  Untitled.swift
+//  APIConfig.swift
 //  CoinCap
 //
 //  Created by Marina Lunts on 05.01.25.
