@@ -17,14 +17,18 @@ struct DetailsView: View {
         
         static let horizontalSpacing: CGFloat = 16
         static let spacing: CGFloat = 24
+        static let bottomSpacing: CGFloat = 62
+        static let cornerRadius: CGFloat = 16
+        
+        static let imageHeight: CGFloat = 40
     }
     
     
     var body: some View{
-        VStack{
+        VStack(spacing: Constants.spacing) {
             headerView(text: title, icon: iconURL)
             
-            Spacer()
+            contentView
         }
         .applyGradientBackground()
         .navigationBarBackButtonHidden(true)
@@ -54,6 +58,50 @@ struct DetailsView: View {
                    height: Constants.imageHeight)
         }
         .padding(Constants.headerHorizontalSpacing)
+    }
+}
+
+extension DetailsView {
+    var contentView: some View {
+        VStack {
+            infoView(for: .preview1)
+            
+            Spacer()
+        }
+        .background(.white.opacity(0.4))
+        .cornerRadius(Constants.cornerRadius)
+        .padding(.horizontal, Constants.horizontalSpacing)
+        .padding(.bottom, Constants.bottomSpacing)
+    }
+    
+    func infoView(for asset: Asset) -> some View {
+        VStack(spacing: Constants.spacing) {
+            textCell(key: "Price", value: asset.priceUsd.compactDollarSum)
+            textCell(key: "Change (24hr)", value: asset.percentageChange,
+                     highlightColor: asset.isPositivePercentageChange ? ColorConstants.positiveColor : ColorConstants.negativeColor)
+            
+            Divider()
+                .overlay(ColorConstants.dividerColor)
+            
+            textCell(key: "Market Cap", value: asset.marketCapUsd.compactDollarSum)
+            textCell(key: "Volume (24hr)", value: asset.volumeUsd24Hr.compactDollarSum)
+            textCell(key: "Supply", value: asset.supply.compactSum)
+        }
+        .padding(Constants.spacing)
+    }
+    
+    func textCell(key: String,
+                  value: String,
+                  highlightColor: Color = ColorConstants.foregroundTextColor) -> some View {
+        HStack {
+            Text(key)
+                .regularText(size: 16)
+            
+            Spacer()
+            
+            Text(value)
+                .boldText(size: 16, color: highlightColor)
+        }
     }
 }
 
