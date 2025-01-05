@@ -70,12 +70,12 @@ struct OverviewListItemView: View {
     var titleView: some View {
         HStack {
             Text(name)
-                .font(.custom("Poppins-Bold", size: Constants.titleFontSize))
+                .boldText(size: Constants.titleFontSize)
             
             Spacer()
             
             Text(price)
-                .font(.custom("Poppins-Bold", size: Constants.subtitleFontSize))
+                .boldText(size: Constants.subtitleFontSize)
         }
         .frame(height: Constants.titleViewHeight)
     }
@@ -83,12 +83,12 @@ struct OverviewListItemView: View {
     var subtitleView: some View {
         HStack {
             Text(symbol)
-                .font(.custom("Poppins-Regular", size: Constants.subtitleFontSize))
+                .regularText(size: Constants.subtitleFontSize)
             
             Spacer()
             
             Text(percentageChange)
-                .font(.custom("Poppins-Bold", size: Constants.percentageFontSize))
+                .boldText(size: Constants.percentageFontSize)
                 .foregroundColor(percentageChange.hasPrefix("-") ? .red : .green)
         }
         .frame(height: Constants.subtitleViewHeight)
