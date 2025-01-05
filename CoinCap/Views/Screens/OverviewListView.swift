@@ -34,7 +34,6 @@ struct OverviewListView: View {
                         listView(with: viewStore)
                     }
                 }
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .padding(Constants.padding)
                 .background(LinearGradient(
                     gradient: Gradient(colors: Constants.gradientColors),
@@ -74,6 +73,7 @@ struct OverviewListView: View {
                 }
             }
         }
+        .scrollIndicators(.hidden)
     }
 }
 
