@@ -8,9 +8,9 @@
 import Foundation
 
 enum APIConfig {
-    static func getAssets() async throws -> Result<[Asset], Error> {
+    static func getAssets(limit: Int = 10) async throws -> Result<[Asset], Error> {
         let baseUrl = "https://api.coincap.io"
-        let assetsPath = "/v2/assets"
+        let assetsPath = "/v2/assets?limit=\(limit)"
         
         guard let assetsUrl = URL(string: baseUrl + assetsPath) else {
             return .failure(URLError(.badURL))
