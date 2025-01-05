@@ -69,7 +69,6 @@ struct OverviewListItemView: View {
             subtitleView
             buttonView
         }
-        .foregroundStyle(Constants.foregroundTextColor)
     }
     
     var titleView: some View {

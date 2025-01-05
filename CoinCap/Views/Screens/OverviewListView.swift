@@ -13,7 +13,7 @@ struct OverviewListView: View {
     
     enum Constants {
         static let spacing: CGFloat = 16
-        static let foregroundTextColor: Color = .init(hex: 0x292E33)
+       
         static let titleHeight: CGFloat = 55
         static let padding: CGFloat = 16
     }
@@ -45,7 +45,6 @@ struct OverviewListView: View {
     func titleView(with text: String) -> some View {
         Text(text)
             .boldText(size: 32)
-            .foregroundStyle(Constants.foregroundTextColor)
             .textCase(.uppercase)
             .frame(height: Constants.titleHeight)
     }
