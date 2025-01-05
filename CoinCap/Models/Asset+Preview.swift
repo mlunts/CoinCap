@@ -6,7 +6,7 @@
 //
 
 extension Asset {
-    static let preview1 = Asset(
+    static let preview1 = Self(
         id: "bitcoin",
         symbol: "BTC",
         name: "Bitcoin",
@@ -17,7 +17,7 @@ extension Asset {
         changePercent24Hr: "-0.54"
     )
     
-    static let preview2 = Asset(
+    static let preview2 = Self(
         id: "ethereum",
         symbol: "ETH",
         name: "Ethereum",

@@ -6,6 +6,7 @@
 //
 
 import Foundation
+
 struct Asset: Identifiable, Codable, Equatable {
     let id: String
     let symbol: String

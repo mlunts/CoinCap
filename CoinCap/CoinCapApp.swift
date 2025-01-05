@@ -7,6 +7,7 @@
 
 import SwiftUI
 import ComposableArchitecture
+
 @main
 struct CoinCapApp: App {
     var body: some Scene {
