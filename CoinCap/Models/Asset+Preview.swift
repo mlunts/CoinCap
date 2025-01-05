@@ -10,21 +10,21 @@ extension Asset {
         id: "bitcoin",
         symbol: "BTC",
         name: "Bitcoin",
-        supply: "19000000",
-        marketCapUsd: "600000000000",
-        volumeUsd24Hr: "20000000000",
-        priceUsd: "30000",
-        changePercent24Hr: "-0.54"
+        supply: "21000000",
+        marketCapUsd: "900000000000",
+        volumeUsd24Hr: "35000000000",
+        priceUsd: "43000",
+        changePercent24Hr: "5.12345"
     )
     
     static let preview2 = Self(
         id: "ethereum",
         symbol: "ETH",
         name: "Ethereum",
-        supply: "120000000",
-        marketCapUsd: "200000000000",
-        volumeUsd24Hr: "10000000000",
-        priceUsd: "1800",
-        changePercent24Hr: "0.44"
+        supply: "114000000",
+        marketCapUsd: "400000000000",
+        volumeUsd24Hr: "20000000000",
+        priceUsd: "3500.4567",
+        changePercent24Hr: "-1.24"
     )
 }

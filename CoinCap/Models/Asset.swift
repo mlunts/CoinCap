@@ -39,7 +39,7 @@ extension Asset {
     }
     
     var isPositivePercentageChange: Bool {
-        percentageChange.hasPrefix("+")
+        !percentageChange.hasPrefix("-")
     }
     
     var price: String {
