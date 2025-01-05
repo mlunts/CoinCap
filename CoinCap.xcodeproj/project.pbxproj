@@ -33,9 +33,22 @@
 		D94BB34C2D2979F10073CE47 /* CoinCapUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CoinCapUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		D9E2BE152D2AD2A60015F063 /* Exceptions for "CoinCap" folder in "CoinCap" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = D94BB3312D2979EF0073CE47 /* CoinCap */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		D94BB3342D2979EF0073CE47 /* CoinCap */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				D9E2BE152D2AD2A60015F063 /* Exceptions for "CoinCap" folder in "CoinCap" target */,
+			);
 			path = CoinCap;
 			sourceTree = "<group>";
 		};
@@ -416,6 +429,7 @@
 				DEVELOPMENT_TEAM = 7BV7G443SR;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = CoinCap/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -445,6 +459,7 @@
 				DEVELOPMENT_TEAM = 7BV7G443SR;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = CoinCap/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
