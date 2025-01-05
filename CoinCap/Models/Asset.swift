@@ -17,18 +17,18 @@ struct Asset: Identifiable, Codable, Equatable {
     let changePercent24Hr: String?
     
     var percentageChange: String {
-           if let change = changePercent24Hr, let value = Double(change) {
-               return String(format: "%.2f%%", value)
-           }
-           return "0.00%"
-       }
-       
-       var price: String {
-           if let price = priceUsd, let value = Double(price) {
-               return "$" + String(format: "%.2f", value)
-           }
-           return "$0.00"
-       }
+        if let change = changePercent24Hr, let value = Double(change) {
+            return String(format: "%.2f%%", value)
+        }
+        return "0.00%"
+    }
+    
+    var price: String {
+        if let price = priceUsd, let value = Double(price) {
+            return "$" + String(value.formatted(.number.notation(.compactName).locale(Locale(identifier: "en_US"))))
+        }
+        return "$0.00"
+    }
     
     var iconURL: URL? {
         URL(string: "https://assets.coincap.io/assets/icons/\(symbol.lowercased())@2x.png")
