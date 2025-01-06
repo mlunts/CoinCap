@@ -47,8 +47,12 @@ extension Asset {
     }
 }
 
-struct AssetResponse: Codable {
+struct AssetsResponse: Codable {
     let data: [Asset]
+}
+
+struct AssetResponse: Codable {
+    let data: Asset
 }
 
 extension String {
