@@ -26,7 +26,7 @@ final class AssetTests: XCTestCase {
     func testPriceFormatting() {
         let asset = Asset.preview1
         
-        XCTAssertEqual(asset.price, "$43K")
+        XCTAssertEqual(asset.priceUsd.compactDollarSum, "$43K")
     }
 
 }

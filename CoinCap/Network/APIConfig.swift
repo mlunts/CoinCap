@@ -7,7 +7,14 @@
 
 import Foundation
 
+protocol URLSessionProtocol {
+    func data(for request: URLRequest) async throws -> (Data, URLResponse)
+}
+
+extension URLSession: URLSessionProtocol {}
+
 enum APIConfig {
+    static var urlSession: URLSessionProtocol = URLSession.shared
     static let baseUrl = "https://api.coincap.io"
     
     static func getAssets(limit: Int = 10) async -> Result<[Asset], Error> {
@@ -30,7 +37,7 @@ private extension APIConfig {
         let request = URLRequest(url: url)
         
         do {
-            let (data, response) = try await URLSession.shared.data(for: request)
+            let (data, response) = try await urlSession.data(for: request)
             
             guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
                 return .failure(URLError(.badServerResponse))
