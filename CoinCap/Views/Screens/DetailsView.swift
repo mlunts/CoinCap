@@ -31,6 +31,8 @@ struct DetailsView: View {
         static let imageHeight: CGFloat = 40
         
         static let textSize: CGFloat = 16
+        static let textCellHeight: CGFloat = 11
+        static let dividerVerticalPadding: CGFloat = 8
         static let headerTextSize: CGFloat = 32
         static let backgroundOpacity: CGFloat = 0.4
     }
@@ -111,6 +113,7 @@ private extension DetailsView {
             
             Divider()
                 .overlay(ColorConstants.dividerColor)
+                .padding(.vertical, Constants.dividerVerticalPadding)
             
             textCell(key: "Market Cap", value: asset.marketCapUsd.compactDollarSum)
             textCell(key: "Volume (24hr)", value: asset.volumeUsd24Hr.compactDollarSum)
@@ -131,6 +134,7 @@ private extension DetailsView {
             Text(value)
                 .boldText(size: Constants.textSize, color: highlightColor)
         }
+        .frame(height: Constants.textCellHeight)
     }
     
     var loadingView: some View {
