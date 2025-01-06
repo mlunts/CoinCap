@@ -24,18 +24,19 @@ struct DetailsView: View {
     
     enum Constants {
         static let headerHorizontalSpacing: CGFloat = 9
-        
         static let horizontalSpacing: CGFloat = 16
         static let spacing: CGFloat = 24
         static let bottomSpacing: CGFloat = 62
         static let cornerRadius: CGFloat = 16
-        
         static let imageHeight: CGFloat = 40
+        
+        static let textSize: CGFloat = 16
+        static let headerTextSize: CGFloat = 32
+        static let backgroundOpacity: CGFloat = 0.4
     }
     
-    
-    var body: some View{
-        WithViewStore(self.store, observe: {$0}) { viewStore in
+    var body: some View {
+        WithViewStore(self.store, observe: { $0 }) { viewStore in
             VStack(spacing: Constants.spacing) {
                 headerView(text: viewStore.asset.name,
                            icon: viewStore.asset.iconURL)
@@ -59,7 +60,7 @@ struct DetailsView: View {
             Spacer()
             
             Text(text)
-                .boldText(size: 32)
+                .boldText(size: Constants.headerTextSize)
                 .textCase(.uppercase)
             
             Spacer()
@@ -76,7 +77,7 @@ struct DetailsView: View {
 
 private extension DetailsView {
     var contentView: some View {
-        WithViewStore(self.store, observe: {$0}) { viewStore in
+        WithViewStore(self.store, observe: { $0 }) { viewStore in
             VStack {
                 switch viewStore.response {
                 case .success(let asset):
@@ -92,7 +93,7 @@ private extension DetailsView {
                 
                 Spacer()
             }
-            .background(.white.opacity(0.4))
+            .background(Color.white.opacity(Constants.backgroundOpacity))
             .cornerRadius(Constants.cornerRadius)
             .padding(.horizontal, Constants.horizontalSpacing)
             .padding(.bottom, Constants.bottomSpacing)
@@ -123,18 +124,18 @@ private extension DetailsView {
                   highlightColor: Color = ColorConstants.foregroundTextColor) -> some View {
         HStack {
             Text(key)
-                .regularText(size: 16)
+                .regularText(size: Constants.textSize)
             
             Spacer()
             
             Text(value)
-                .boldText(size: 16, color: highlightColor)
+                .boldText(size: Constants.textSize, color: highlightColor)
         }
     }
     
     var loadingView: some View {
         ZStack {
-            Color.white.opacity(0.4)
+            Color.white.opacity(Constants.backgroundOpacity)
             ProgressView()
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
