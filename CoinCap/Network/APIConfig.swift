@@ -28,6 +28,36 @@ enum APIConfig {
             }
             
             do {
+                let response = try JSONDecoder().decode(AssetsResponse.self, from: data)
+                return .success(response.data)
+            } catch {
+                print("Unexpected decoding error: \(error.localizedDescription)")
+                return .failure(error)
+            }
+        } catch {
+            print("Network error: \(error.localizedDescription)")
+            return .failure(URLError(.badServerResponse))
+        }
+    }
+    
+    static func getAsset(by id: String) async throws -> Result<Asset, Error> {
+        let assetsPath = "/v2/assets"
+        
+        guard let assetsUrl = URL(string: baseUrl + assetsPath + "/" + id) else {
+            return .failure(URLError(.badURL))
+        }
+        
+        do {
+            let assetRequest = URLRequest(url: assetsUrl)
+            let (data, response) = try await URLSession.shared.data(for: assetRequest)
+            
+            if let httpResponse = response as? HTTPURLResponse {
+                guard httpResponse.statusCode == 200 else {
+                    return .failure(URLError(.badServerResponse))
+                }
+            }
+            
+            do {
                 let response = try JSONDecoder().decode(AssetResponse.self, from: data)
                 return .success(response.data)
             } catch {
