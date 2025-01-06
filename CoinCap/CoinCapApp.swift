@@ -13,10 +13,7 @@ struct CoinCapApp: App {
     var body: some Scene {
         WindowGroup {
             OverviewListView(
-                store: Store(
-                    initialState: OverviewListReducer.State(),
-                    reducer: OverviewListReducer.init
-                )
+                title: "Coins"
             )
         }
     }
