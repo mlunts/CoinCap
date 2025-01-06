@@ -29,6 +29,7 @@ struct BoldTextModifier: ViewModifier {
 struct RegularTextModifier: ViewModifier {
     let fontSize: CGFloat
     let color: Color
+    
     func body(content: Content) -> some View {
         content
             .font(.custom("Poppins-Regular", size: fontSize))
