@@ -54,16 +54,3 @@ struct AssetsResponse: Codable {
 struct AssetResponse: Codable {
     let data: Asset
 }
-
-extension String {
-    var compactSum: Self {
-        if let value = Double(self) {
-            return String(value.formatted(.number.notation(.compactName).locale(Locale(identifier: "en_US"))))
-        }
-        return "0.00"
-    }
-    
-    var compactDollarSum: Self {
-        return "$" + compactSum
-    }
-}
