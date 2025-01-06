@@ -27,11 +27,11 @@ struct OverviewListItemView: View {
         static let subtitleFontSize: CGFloat = 16
         static let percentageFontSize: CGFloat = 16
         
-        static let foregroundTextColor: Color = .init(hex: 0x292E33)
-        
         static let titleViewHeight: CGFloat = 14
         static let subtitleViewHeight: CGFloat = 11
         static let buttonViewHeight: CGFloat = 24
+        
+        static let titleViewTopPadding: CGFloat = 4
     }
     
     init(item: Asset) {
@@ -46,11 +46,7 @@ struct OverviewListItemView: View {
     var body: some View {
         HStack(alignment: .top,
                spacing: Constants.spacing) {
-            AsyncImage(url: iconURL) { image in
-                image.image?.resizable()
-            }
-            .frame(width: Constants.imageHeight,
-                   height: Constants.imageHeight)
+            iconView
             
             infoView
         }
@@ -58,6 +54,14 @@ struct OverviewListItemView: View {
         .padding(.leading, Constants.leadingPadding)
         .background(Constants.backgroundColor)
         .cornerRadius(Constants.cornerRadius)
+    }
+    
+    var iconView: some View {
+        AsyncImage(url: iconURL) { image in
+            image.image?.resizable()
+        }
+        .frame(width: Constants.imageHeight,
+               height: Constants.imageHeight)
     }
     
     var infoView: some View {
@@ -73,6 +77,7 @@ struct OverviewListItemView: View {
         HStack {
             Text(name)
                 .boldText(size: Constants.titleFontSize)
+                .textCase(.uppercase)
             
             Spacer()
             
@@ -80,6 +85,7 @@ struct OverviewListItemView: View {
                 .boldText(size: Constants.subtitleFontSize)
         }
         .frame(height: Constants.titleViewHeight)
+        .padding(.top, Constants.titleViewTopPadding)
     }
     
     var subtitleView: some View {

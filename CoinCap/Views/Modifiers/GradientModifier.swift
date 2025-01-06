@@ -28,8 +28,8 @@ struct GradientModifier: ViewModifier {
 extension View {
     func applyGradientBackground(colors: [Color] =
                                  [
-                                    Color(hex: 0x6efaf5, opacity: 0.3),
-                                    Color(hex: 0x0a28eb, opacity: 0.3)
+                                    Color("lightBlue").opacity(0.3),
+                                    Color("darkBlue").opacity(0.3)
                                  ],
                                  startPoint: UnitPoint = .top,
                                  endPoint: UnitPoint = .bottom) -> some View {
