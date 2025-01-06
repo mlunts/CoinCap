@@ -6,11 +6,21 @@
 //
 
 import SwiftUI
+import ComposableArchitecture
 
 struct DetailsView: View {
-    let title: String
-    let iconURL: URL?
-    @Environment(\.presentationMode) var presentation
+    @Environment(\.presentationMode) private var presentation
+    private let store: StoreOf<DetailsReducer>
+    
+    init(for asset: Asset) {
+        store = Store(
+            initialState: .init(
+                asset: asset
+            ), reducer: {
+                DetailsReducer()
+            }
+        )
+    }
     
     enum Constants {
         static let headerHorizontalSpacing: CGFloat = 9
@@ -25,24 +35,27 @@ struct DetailsView: View {
     
     
     var body: some View{
-        VStack(spacing: Constants.spacing) {
-            headerView(text: title, icon: iconURL)
-            
-            contentView
+        WithViewStore(self.store, observe: {$0}) { viewStore in
+            VStack(spacing: Constants.spacing) {
+                headerView(text: viewStore.asset.name,
+                           icon: viewStore.asset.iconURL)
+                
+                contentView
+            }
+            .applyGradientBackground()
+            .navigationBarBackButtonHidden(true)
         }
-        .applyGradientBackground()
-        .navigationBarBackButtonHidden(true)
     }
     
-    func headerView(text: String,
-                    icon: URL?) -> some View {
+    private func headerView(text: String,
+                            icon: URL?) -> some View {
         HStack {
             Button {
                 presentation.wrappedValue.dismiss()
             } label: {
                 Image("chevron-left")
             }
-
+            
             Spacer()
             
             Text(text)
@@ -61,17 +74,32 @@ struct DetailsView: View {
     }
 }
 
-extension DetailsView {
+private extension DetailsView {
     var contentView: some View {
-        VStack {
-            infoView(for: .preview1)
-            
-            Spacer()
+        WithViewStore(self.store, observe: {$0}) { viewStore in
+            VStack {
+                switch viewStore.response {
+                case .success(let asset):
+                    infoView(for: asset)
+                case .failure:
+                    Text(viewStore.errorMessage ?? "")
+                case nil:
+                    ZStack(alignment: .top) {
+                        infoView(for: viewStore.asset)
+                        loadingView
+                    }
+                }
+                
+                Spacer()
+            }
+            .background(.white.opacity(0.4))
+            .cornerRadius(Constants.cornerRadius)
+            .padding(.horizontal, Constants.horizontalSpacing)
+            .padding(.bottom, Constants.bottomSpacing)
+            .task {
+                viewStore.send(.fetchData)
+            }
         }
-        .background(.white.opacity(0.4))
-        .cornerRadius(Constants.cornerRadius)
-        .padding(.horizontal, Constants.horizontalSpacing)
-        .padding(.bottom, Constants.bottomSpacing)
     }
     
     func infoView(for asset: Asset) -> some View {
@@ -103,9 +131,16 @@ extension DetailsView {
                 .boldText(size: 16, color: highlightColor)
         }
     }
+    
+    var loadingView: some View {
+        ZStack {
+            Color.white.opacity(0.4)
+            ProgressView()
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
 }
 
 #Preview {
-    let asset = Asset.preview1
-    DetailsView(title: asset.name, iconURL: asset.iconURL)
+    DetailsView(for: .preview1)
 }
