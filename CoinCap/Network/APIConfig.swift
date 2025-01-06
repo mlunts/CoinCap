@@ -10,63 +10,40 @@ import Foundation
 enum APIConfig {
     static let baseUrl = "https://api.coincap.io"
     
-    static func getAssets(limit: Int = 10) async throws -> Result<[Asset], Error> {
+    static func getAssets(limit: Int = 10) async -> Result<[Asset], Error> {
         let assetsPath = "/v2/assets?limit=\(limit)"
-        
-        guard let assetsUrl = URL(string: baseUrl + assetsPath) else {
-            return .failure(URLError(.badURL))
-        }
-        
-        do {
-            let assetRequest = URLRequest(url: assetsUrl)
-            let (data, response) = try await URLSession.shared.data(for: assetRequest)
-            
-            if let httpResponse = response as? HTTPURLResponse {
-                guard httpResponse.statusCode == 200 else {
-                    return .failure(URLError(.badServerResponse))
-                }
-            }
-            
-            do {
-                let response = try JSONDecoder().decode(AssetsResponse.self, from: data)
-                return .success(response.data)
-            } catch {
-                print("Unexpected decoding error: \(error.localizedDescription)")
-                return .failure(error)
-            }
-        } catch {
-            print("Network error: \(error.localizedDescription)")
-            return .failure(URLError(.badServerResponse))
-        }
+        return await fetch(urlPath: assetsPath, responseType: AssetsResponse.self).map { $0.data }
     }
     
-    static func getAsset(by id: String) async throws -> Result<Asset, Error> {
-        let assetsPath = "/v2/assets"
-        
-        guard let assetsUrl = URL(string: baseUrl + assetsPath + "/" + id) else {
+    static func getAsset(by id: String) async -> Result<Asset, Error> {
+        let assetPath = "/v2/assets/\(id)"
+        return await fetch(urlPath: assetPath, responseType: AssetResponse.self).map { $0.data }
+    }
+}
+
+private extension APIConfig {
+    static func fetch<T: Decodable>(urlPath: String, responseType: T.Type) async -> Result<T, Error> {
+        guard let url = URL(string: baseUrl + urlPath) else {
             return .failure(URLError(.badURL))
         }
         
+        let request = URLRequest(url: url)
+        
         do {
-            let assetRequest = URLRequest(url: assetsUrl)
-            let (data, response) = try await URLSession.shared.data(for: assetRequest)
+            let (data, response) = try await URLSession.shared.data(for: request)
             
-            if let httpResponse = response as? HTTPURLResponse {
-                guard httpResponse.statusCode == 200 else {
-                    return .failure(URLError(.badServerResponse))
-                }
+            guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
+                return .failure(URLError(.badServerResponse))
             }
             
             do {
-                let response = try JSONDecoder().decode(AssetResponse.self, from: data)
-                return .success(response.data)
+                let decodedResponse = try JSONDecoder().decode(responseType, from: data)
+                return .success(decodedResponse)
             } catch {
-                print("Unexpected decoding error: \(error.localizedDescription)")
-                return .failure(error)
+                return .failure(URLError(.cannotDecodeRawData))
             }
         } catch {
-            print("Network error: \(error.localizedDescription)")
-            return .failure(URLError(.badServerResponse))
+            return .failure(error)
         }
     }
 }

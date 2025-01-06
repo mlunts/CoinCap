@@ -35,7 +35,7 @@ class OverviewListReducer: Reducer {
             state.errorMessage = nil
             
             return .run { send in
-                let response = try await APIConfig.getAssets()
+                let response = await APIConfig.getAssets()
                 await send(.fetchAssetsResponse(response))
             }
         case .fetchAssetsResponse(.success(let data)):
@@ -59,7 +59,7 @@ extension DependencyValues {
     
     private enum FetchAssetsKey: DependencyKey {
         static let liveValue: @Sendable () async throws -> [Asset] = {
-            let result = try await APIConfig.getAssets()
+            let result = await APIConfig.getAssets()
             switch result {
             case .success(let assets): return assets
             case .failure(let error): throw error
