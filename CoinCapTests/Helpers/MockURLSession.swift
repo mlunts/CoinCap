@@ -5,6 +5,8 @@
 //  Created by Marina Lunts on 06.01.25.
 //
 
+import Foundation
+
 class MockURLSession: URLSessionProtocol {
     var dataResult: Result<(Data, URLResponse), Error>
     

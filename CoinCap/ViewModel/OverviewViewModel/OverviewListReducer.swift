@@ -18,7 +18,18 @@ struct OverviewListReducer: Reducer {
         var response: Result<[Asset], Error>?
     }
     
-    enum Action {
+    enum Action: Equatable {
+        static func == (lhs: OverviewListReducer.Action, rhs: OverviewListReducer.Action) -> Bool {
+            switch (lhs, rhs) {
+            case (.fetchData, .fetchData):
+                true
+            case (.fetchResponse, .fetchResponse):
+                true
+            default:
+                false
+            }
+        }
+        
         case fetchData
         case fetchResponse(Result<[Asset], Error>)
     }
