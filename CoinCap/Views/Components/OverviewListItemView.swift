@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct OverviewListItemView: View {
-    private let id: String
     private let iconURL: URL?
     private let name: String
     private let symbol: String
@@ -36,11 +35,10 @@ struct OverviewListItemView: View {
     }
     
     init(item: Asset) {
-        self.id = item.id
         self.iconURL = item.iconURL
         self.name = item.name
         self.symbol = item.symbol
-        self.price = item.price
+        self.price = item.priceUsd.compactDollarSum
         self.percentageChange = item.percentageChange
         isPositivePercentageChange = item.isPositivePercentageChange
     }
@@ -69,7 +67,6 @@ struct OverviewListItemView: View {
             subtitleView
             buttonView
         }
-        .foregroundStyle(Constants.foregroundTextColor)
     }
     
     var titleView: some View {

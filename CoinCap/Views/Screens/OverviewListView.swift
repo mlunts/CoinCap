@@ -9,17 +9,23 @@ import SwiftUI
 import ComposableArchitecture
 
 struct OverviewListView: View {
-    let store: Store<OverviewListReducer.State, OverviewListReducer.Action>
+    let store: StoreOf<OverviewListReducer>
     
     enum Constants {
         static let spacing: CGFloat = 16
-        static let foregroundTextColor: Color = .init(hex: 0x292E33)
+       
         static let titleHeight: CGFloat = 55
         static let padding: CGFloat = 16
-        static let gradientColors = [
-            Color(hex: 0x6efaf5, opacity: 0.3),
-            Color(hex: 0x0a28eb, opacity: 0.3)
-        ]
+    }
+    
+    init(title: String) {
+        store = Store(
+            initialState: .init(
+                title: title
+            ), reducer: {
+                OverviewListReducer()
+            }
+        )
     }
     
     var body: some View {
@@ -28,22 +34,21 @@ struct OverviewListView: View {
                 VStack(alignment: .leading) {
                     titleView(with: viewStore.state.title)
                     
-                    if viewStore.assets.isEmpty {
+                    switch viewStore.response {
+                    case .success(let assets):
+                        listView(with: assets)
+                    case .failure(let error):
+                        Text(error.localizedDescription)
+                    case nil:
                         loadingView
-                    } else {
-                        listView(with: viewStore)
                     }
                 }
                 .padding(Constants.padding)
-                .background(LinearGradient(
-                    gradient: Gradient(colors: Constants.gradientColors),
-                    startPoint: .top,
-                    endPoint: .bottom
-                ))
-                .edgesIgnoringSafeArea(.bottom) 
+                .applyGradientBackground()
+                .edgesIgnoringSafeArea(.bottom)
             }
             .onAppear {
-                viewStore.send(.fetchAssets)
+                viewStore.send(.fetchData)
             }
             .navigationTitle("")
             .navigationBarHidden(true)
@@ -53,7 +58,6 @@ struct OverviewListView: View {
     func titleView(with text: String) -> some View {
         Text(text)
             .boldText(size: 32)
-            .foregroundStyle(Constants.foregroundTextColor)
             .textCase(.uppercase)
             .frame(height: Constants.titleHeight)
     }
@@ -65,11 +69,13 @@ struct OverviewListView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
     
-    func listView(with viewStore: ViewStore<OverviewListReducer.State, OverviewListReducer.Action>) -> some View {
+    func listView(with assets: [Asset]) -> some View {
         ScrollView {
             VStack(spacing: Constants.spacing) {
-                ForEach(viewStore.state.assets) { asset in
-                    OverviewListItemView(item: asset)
+                ForEach(assets) { asset in
+                    NavigationLink(destination: DetailsView(for: asset)) {
+                        OverviewListItemView(item: asset)
+                    }
                 }
             }
         }
@@ -79,9 +85,6 @@ struct OverviewListView: View {
 
 #Preview {
     OverviewListView(
-        store: Store(
-            initialState: OverviewListReducer.State(),
-            reducer: OverviewListReducer.init
-        )
+        title: "Coins"
     )
 }
