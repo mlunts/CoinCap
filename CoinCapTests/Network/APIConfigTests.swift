@@ -8,30 +8,17 @@ import XCTest
 @testable import CoinCap
 
 final class APIConfigTests: XCTestCase {
-    class MockURLSession: URLSessionProtocol {
-        var mockData: Data?
-        var mockResponse: URLResponse?
-        var mockError: Error?
-        
-        func data(for request: URLRequest) async throws -> (Data, URLResponse) {
-            if let error = mockError {
-                throw error
-            }
-            return (mockData!, mockResponse!)
-        }
-    }
-    
     func testGetAssets_success() async {
         let mockAsset1 = Asset.preview1
         let mockAsset2 = Asset.preview2
         let mockAssetsResponse = AssetsResponse(data: [mockAsset1, mockAsset2])
         let mockData = try! JSONEncoder().encode(mockAssetsResponse)
-        let mockURLResponse = HTTPURLResponse(url: URL(string: "https://api.coincap.io")!,
-                                              statusCode: 200, httpVersion: nil, headerFields: nil)
+        let mockResponse = HTTPURLResponse(url: URL(string: "https://api.coincap.io")!,
+                                           statusCode: 200,
+                                           httpVersion: nil,
+                                           headerFields: nil)!
         
-        let mockSession = MockURLSession()
-        mockSession.mockData = mockData
-        mockSession.mockResponse = mockURLResponse
+        let mockSession = MockURLSession(dataResult: .success((mockData, mockResponse)))
         APIConfig.urlSession = mockSession
         
         let result = await APIConfig.getAssets(limit: 2)
@@ -47,8 +34,7 @@ final class APIConfigTests: XCTestCase {
     }
     
     func testGetAssets_failure() async {
-        let mockSession = MockURLSession()
-        mockSession.mockError = URLError(.timedOut)
+        let mockSession = MockURLSession(dataResult: .failure(URLError(.timedOut)))
         APIConfig.urlSession = mockSession
         
         let result = await APIConfig.getAssets(limit: 1)
@@ -66,12 +52,12 @@ final class APIConfigTests: XCTestCase {
         let mockAsset = Asset.preview1
         let mockAssetResponse = AssetResponse(data: mockAsset)
         let mockData = try! JSONEncoder().encode(mockAssetResponse)
-        let mockURLResponse = HTTPURLResponse(url: URL(string: "https://api.coincap.io")!,
-                                               statusCode: 200, httpVersion: nil, headerFields: nil)
+        let mockResponse = HTTPURLResponse(url: URL(string: "https://api.coincap.io")!,
+                                           statusCode: 200,
+                                           httpVersion: nil,
+                                           headerFields: nil)!
         
-        let mockSession = MockURLSession()
-        mockSession.mockData = mockData
-        mockSession.mockResponse = mockURLResponse
+        let mockSession = MockURLSession(dataResult: .success((mockData, mockResponse)))
         APIConfig.urlSession = mockSession
         
         let result = await APIConfig.getAsset(by: "bitcoin")
@@ -87,8 +73,7 @@ final class APIConfigTests: XCTestCase {
     }
     
     func testGetAsset_failure() async {
-        let mockSession = MockURLSession()
-        mockSession.mockError = URLError(.notConnectedToInternet)
+        let mockSession = MockURLSession(dataResult: .failure(URLError(.notConnectedToInternet)))
         APIConfig.urlSession = mockSession
         
         let result = await APIConfig.getAsset(by: "")
