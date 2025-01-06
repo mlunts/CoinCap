@@ -8,11 +8,16 @@
 import SwiftUI
 
 struct ErrorView: View {
+    let text: String
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        Text(text)
+            .regularText(size: 20)
+            .frame(maxWidth: .infinity,
+                   maxHeight: .infinity,
+                   alignment: .center)
     }
 }
 
 #Preview {
-    ErrorView()
+    ErrorView(text: "No Internet Connection")
 }
