@@ -8,10 +8,10 @@
 import SwiftUI
 
 enum ColorConstants {
-    static let foregroundTextColor: Color = .init(hex: 0x292E33)
-    static let negativeColor: Color = .init(hex: 0xe54560)
-    static let positiveColor: Color = .init(hex: 0x1fcc8f)
-    static let dividerColor: Color = .init(hex: 0x0a28eb)
+    static let foregroundTextColor: Color = .init("gray10")
+    static let negativeColor: Color = .init("red10")
+    static let positiveColor: Color = .init("lightGreen")
+    static let dividerColor: Color = .init("darkBlue")
 }
 
 // MARK: - Text Modifiers
@@ -29,6 +29,7 @@ struct BoldTextModifier: ViewModifier {
 struct RegularTextModifier: ViewModifier {
     let fontSize: CGFloat
     let color: Color
+    
     func body(content: Content) -> some View {
         content
             .font(.custom("Poppins-Regular", size: fontSize))

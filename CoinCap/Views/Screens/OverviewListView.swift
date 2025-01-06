@@ -38,7 +38,7 @@ struct OverviewListView: View {
                     case .success(let assets):
                         listView(with: assets)
                     case .failure(let error):
-                        Text(error.localizedDescription)
+                        ErrorView(text: error.localizedDescription)
                     case nil:
                         loadingView
                     }
