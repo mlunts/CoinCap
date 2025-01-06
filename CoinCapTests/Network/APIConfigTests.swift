@@ -4,6 +4,7 @@
 //
 //  Created by Marina Lunts on 06.01.25.
 //
+
 import XCTest
 @testable import CoinCap
 
