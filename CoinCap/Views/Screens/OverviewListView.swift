@@ -9,7 +9,7 @@ import SwiftUI
 import ComposableArchitecture
 
 struct OverviewListView: View {
-    let store: Store<OverviewListReducer.State, OverviewListReducer.Action>
+    let store: StoreOf<OverviewListReducer>
     
     enum Constants {
         static let spacing: CGFloat = 16
@@ -18,16 +18,29 @@ struct OverviewListView: View {
         static let padding: CGFloat = 16
     }
     
+    init(title: String) {
+        store = Store(
+            initialState: .init(
+                title: title
+            ), reducer: {
+                OverviewListReducer()
+            }
+        )
+    }
+    
     var body: some View {
         WithViewStore(self.store, observe: { $0 }) { viewStore in
             NavigationView {
                 VStack(alignment: .leading) {
                     titleView(with: viewStore.state.title)
                     
-                    if viewStore.assets.isEmpty {
+                    switch viewStore.response {
+                    case .success(let assets):
+                        listView(with: assets)
+                    case .failure(let error):
+                        ErrorView(text: error.localizedDescription)
+                    case nil:
                         loadingView
-                    } else {
-                        listView(with: viewStore)
                     }
                 }
                 .padding(Constants.padding)
@@ -35,7 +48,7 @@ struct OverviewListView: View {
                 .edgesIgnoringSafeArea(.bottom)
             }
             .onAppear {
-                viewStore.send(.fetchAssets)
+                viewStore.send(.fetchData)
             }
             .navigationTitle("")
             .navigationBarHidden(true)
@@ -56,10 +69,10 @@ struct OverviewListView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
     
-    func listView(with viewStore: ViewStore<OverviewListReducer.State, OverviewListReducer.Action>) -> some View {
+    func listView(with assets: [Asset]) -> some View {
         ScrollView {
             VStack(spacing: Constants.spacing) {
-                ForEach(viewStore.state.assets) { asset in
+                ForEach(assets) { asset in
                     NavigationLink(destination: DetailsView(for: asset)) {
                         OverviewListItemView(item: asset)
                     }
@@ -72,9 +85,6 @@ struct OverviewListView: View {
 
 #Preview {
     OverviewListView(
-        store: Store(
-            initialState: OverviewListReducer.State(),
-            reducer: OverviewListReducer.init
-        )
+        title: "Coins"
     )
 }

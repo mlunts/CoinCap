@@ -8,61 +8,38 @@
 import ComposableArchitecture
 import Foundation
 
-class OverviewListReducer: Reducer {
+struct OverviewListReducer: Reducer {
     struct State: Equatable {
         static func == (lhs: OverviewListReducer.State, rhs: OverviewListReducer.State) -> Bool {
-            lhs.assets == rhs.assets
+            lhs.response?.isEqual(to: rhs.response ?? .failure(NSError())) ?? (rhs.response == nil)
         }
         
-        let title = "Coins"
-        var assets: [Asset] = []
-        var isLoading: Bool = false
-        var errorMessage: String? = nil
+        var title: String
+        var response: Result<[Asset], Error>?
     }
     
     enum Action {
-        case fetchAssets
-        case fetchAssetsResponse(Result<[Asset], Error>)
+        case fetchData
+        case fetchResponse(Result<[Asset], Error>)
     }
     
-    @Dependency(\.fetchAssets) var fetchAssets
-    
-    func reduce(into state: inout State, action: Action) -> Effect<Action> {
-        switch action {
-        case .fetchAssets:
-            state.isLoading = true
-            state.assets = []
-            state.errorMessage = nil
-            
-            return .run { send in
-                let response = try await APIConfig.getAssets()
-                await send(.fetchAssetsResponse(response))
-            }
-        case .fetchAssetsResponse(.success(let data)):
-            state.isLoading = true
-            state.assets = data
-            return .none
-            
-        case .fetchAssetsResponse(.failure(let error)):
-            state.isLoading = false
-            state.errorMessage = error.localizedDescription
-            return .none
-        }
-    }
-}
-
-extension DependencyValues {
-    var fetchAssets: @Sendable () async throws -> [Asset] {
-        get { self[FetchAssetsKey.self] }
-        set { self[FetchAssetsKey.self] = newValue }
-    }
-    
-    private enum FetchAssetsKey: DependencyKey {
-        static let liveValue: @Sendable () async throws -> [Asset] = {
-            let result = try await APIConfig.getAssets()
-            switch result {
-            case .success(let assets): return assets
-            case .failure(let error): throw error
+    var body: some ReducerOf<Self> {
+        Reduce { state, action in
+            switch action {
+            case .fetchData:
+                state.response = nil
+                return .run { send in
+                    let response = await APIConfig.getAssets()
+                    await send(.fetchResponse(response))
+                }
+                
+            case .fetchResponse(.success(let asset)):
+                state.response = .success(asset)
+                return .none
+                
+            case .fetchResponse(.failure(let error)):
+                state.response = .failure(error)
+                return .none
             }
         }
     }

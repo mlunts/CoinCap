@@ -33,7 +33,7 @@ struct DetailsReducer: Reducer {
                 state.errorMessage = nil
                 state.response = nil
                 return .run { [state = state] send in
-                    let response = try await APIConfig.getAsset(by: state.asset.id)
+                    let response = await APIConfig.getAsset(by: state.asset.id)
                     await send(.fetchResponse(response))
                 }
                 

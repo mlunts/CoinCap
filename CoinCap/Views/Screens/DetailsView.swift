@@ -34,6 +34,7 @@ struct DetailsView: View {
         static let textCellHeight: CGFloat = 11
         static let dividerVerticalPadding: CGFloat = 8
         static let headerTextSize: CGFloat = 32
+        static let headerTextLeading: CGFloat = 51
         static let backgroundOpacity: CGFloat = 0.4
     }
     
@@ -52,18 +53,17 @@ struct DetailsView: View {
     
     private func headerView(text: String,
                             icon: URL?) -> some View {
-        HStack {
+        HStack(alignment: .center) {
             Button {
                 presentation.wrappedValue.dismiss()
             } label: {
                 Image("chevron-left")
             }
             
-            Spacer()
-            
             Text(text)
                 .boldText(size: Constants.headerTextSize)
                 .textCase(.uppercase)
+                .padding(.leading, Constants.headerTextLeading)
             
             Spacer()
             
@@ -85,7 +85,7 @@ private extension DetailsView {
                 case .success(let asset):
                     infoView(for: asset)
                 case .failure:
-                    Text(viewStore.errorMessage ?? "")
+                    ErrorView(text: viewStore.errorMessage ?? "")
                 case nil:
                     ZStack(alignment: .top) {
                         infoView(for: viewStore.asset)
@@ -143,6 +143,7 @@ private extension DetailsView {
             ProgressView()
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .padding(.bottom, -Constants.bottomSpacing)
     }
 }
 
