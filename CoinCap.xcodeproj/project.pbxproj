@@ -41,6 +41,16 @@
 			);
 			target = D94BB3312D2979EF0073CE47 /* CoinCap */;
 		};
+		D9E2BE9D2D2B31AC0015F063 /* Exceptions for "CoinCap" folder in "CoinCapTests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Models/Asset.swift,
+				"Models/Asset+Preview.swift",
+				Network/APIConfig.swift,
+				ViewModel/OverviewViewModel/OverviewListReducer.swift,
+			);
+			target = D94BB3412D2979F10073CE47 /* CoinCapTests */;
+		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -48,6 +58,7 @@
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
 				D9E2BE152D2AD2A60015F063 /* Exceptions for "CoinCap" folder in "CoinCap" target */,
+				D9E2BE9D2D2B31AC0015F063 /* Exceptions for "CoinCap" folder in "CoinCapTests" target */,
 			);
 			path = CoinCap;
 			sourceTree = "<group>";

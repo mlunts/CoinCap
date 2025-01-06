@@ -21,7 +21,18 @@ struct DetailsReducer: Reducer {
         var response: Result<Asset, Error>?
     }
     
-    enum Action {
+    enum Action: Equatable,  Error {
+        static func == (lhs: DetailsReducer.Action, rhs: DetailsReducer.Action) -> Bool {
+            switch (lhs, rhs) {
+            case (.fetchData, .fetchData):
+                true
+            case (.fetchResponse, .fetchResponse):
+                true
+            default:
+                false
+            }
+        }
+        
         case fetchData
         case fetchResponse(Result<Asset, Error>)
     }
